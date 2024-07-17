@@ -1,0 +1,14 @@
+.py-5.text-center.container-fluid{
+    background-image: url('../images/home.avif');
+    background-size: cover;
+}
+.logo{
+    height: 50%;
+    width: 50%;
+    object-fit: contain;
+}
+.navlogo{
+    height: 20%;
+    width: 20%;
+    object-fit: contain;
+}

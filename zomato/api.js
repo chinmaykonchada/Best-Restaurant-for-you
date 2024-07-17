@@ -23,7 +23,7 @@ app.get('/restaurant/:id', async (req, res) => {
     const id = parseInt(req.params.id);
     try {
         const result = await db.query('SELECT * FROM zomato WHERE "Restaurant ID" = $1', [id]);// SQL query to use double quotes for the column name since it's case-sensitive.
-        console.log(result.rows);
+        // console.log(result.rows);
         res.json(result.rows);
     } catch (error) {
         console.error(error);
