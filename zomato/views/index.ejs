@@ -18,8 +18,8 @@
               <br>
               <p class="fs-4 fw-normal text-white">Discover the best food & drinks in World</p>
               <br>
-              <form class="d-flex" role="search">
-                <input class="form-control me-2" type="searchbyname" placeholder="Search by name or description." aria-label="Search">
+              <form class="d-flex" role="search" action="/" method="GET">
+                <input class="form-control me-2" type="search" name="searchTerm" placeholder="Search by restaurant name" aria-label="Search" value="<%= currentFilters.searchTerm %>">
                 <button class="btn btn-danger" type="submit">Search</button>
               </form>
             </div>
@@ -31,7 +31,7 @@
               <!-- Filter Section -->
               <div class="row mt-5 mb-3">
                   <div class="col-md-3">
-                      <label for="country" class="form-label">Country</label>
+                      <label for="country" class="form-label">Country Code</label>
                       <select id="country" class="form-select">
                           <option value="">All Countries</option>
                           <% filterOptions.countryCodes.forEach(code => { %>
@@ -112,6 +112,14 @@
         </div>
     </main>
     <script>
+
+        document.querySelector('form[role="search"]').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const searchTerm = this.querySelector('input[name="searchTerm"]').value;
+            const limit = document.getElementById('limit').value;
+            window.location.href = `?page=1&limit=${limit}&searchTerm=${encodeURIComponent(searchTerm)}`;
+        });
+
         document.getElementById('limit').addEventListener('change', function() {
             applyFilters();
         });
@@ -124,12 +132,14 @@
             const minSpend = document.getElementById('minSpend').value;
             const maxSpend = document.getElementById('maxSpend').value;
             const limit = document.getElementById('limit').value;
+            const searchTerm = document.querySelector('input[name="searchTerm"]').value;
 
             let url = `?page=1&limit=${limit}`;
             if (country) url += `&country=${country}`;
             if (cuisines) url += `&cuisines=${cuisines}`;
             if (minSpend) url += `&minSpend=${minSpend}`;
             if (maxSpend) url += `&maxSpend=${maxSpend}`;
+            if (searchTerm) url += `&searchTerm=${encodeURIComponent(searchTerm)}`;
 
             window.location.href = url;
         }

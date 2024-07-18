@@ -23,7 +23,7 @@ app.get('/restaurant/:id', async (req, res) => {
     const id = parseInt(req.params.id);
     try {
         const result = await db.query('SELECT * FROM zomato WHERE "Restaurant ID" = $1', [id]);
-        console.log(result.rows);
+        // console.log(result.rows);
         res.json(result.rows);
     } catch (error) {
         console.error(error);
@@ -39,6 +39,28 @@ app.get('/allrestaurant', async (req, res) => {
 
     try {
         const result = await db.query('SELECT * FROM zomato LIMIT $1 OFFSET $2', [limit, offset]);
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+// GET restaurants by name search
+app.get('/searchrestaurants', async (req, res) => {
+    const { searchTerm, page, limit } = req.query;
+    const pageNumber = parseInt(page) || 1;
+    const itemsPerPage = parseInt(limit) || 10;
+    const offset = (pageNumber - 1) * itemsPerPage;
+
+    try {
+        let queryString = `
+            SELECT * FROM zomato 
+            WHERE LOWER("Restaurant Name") LIKE LOWER($1)
+            LIMIT $2 OFFSET $3
+        `;
+        const queryParams = [`%${searchTerm}%`, itemsPerPage, offset];
+
+        const result = await db.query(queryString, queryParams);
         res.json(result.rows);
     } catch (error) {
         console.error(error);

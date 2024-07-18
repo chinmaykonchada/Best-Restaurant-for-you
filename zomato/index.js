@@ -17,22 +17,31 @@ app.get("/", async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    const { country, cuisines, minSpend, maxSpend } = req.query;
+    const { country, cuisines, minSpend, maxSpend, searchTerm } = req.query;
 
     // Fetch filter options
     const filterOptionsResponse = await axios.get(`${API_URL}/filterOptions`);
     const filterOptions = filterOptionsResponse.data;
 
-    // Fetch restaurants with filters
-    const response = await axios.get(`${API_URL}/filteredrestaurants`, {
-      params: { page, limit, country, cuisines, minSpend, maxSpend }
-    });
+    let response;
+    if (searchTerm) {
+      // If there's a search term, use the new search endpoint
+      response = await axios.get(`${API_URL}/searchrestaurants`, {
+        params: { searchTerm, page, limit }
+      });
+    } else {
+      // Otherwise, use the existing filtered restaurants endpoint
+      response = await axios.get(`${API_URL}/filteredrestaurants`, {
+        params: { page, limit, country, cuisines, minSpend, maxSpend }
+      });
+    }
 
     const currentFilters = {
       country: country || '',
       cuisines: cuisines || '',
       minSpend: minSpend || '',
-      maxSpend: maxSpend || ''
+      maxSpend: maxSpend || '',
+      searchTerm: searchTerm || ''
     };
 
     res.render("index.ejs", { 
