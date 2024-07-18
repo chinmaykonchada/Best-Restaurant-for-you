@@ -19,7 +19,7 @@
               <p class="fs-4 fw-normal text-white">Discover the best food & drinks in World</p>
               <br>
               <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search By Restaurant ID" aria-label="Search">
+                <input class="form-control me-2" type="searchbyname" placeholder="Search by name or description." aria-label="Search">
                 <button class="btn btn-danger" type="submit">Search</button>
               </form>
             </div>
@@ -27,8 +27,40 @@
         </section>
       
         <div class="pb-5">
-          <div class="container">
-            <div class="d-flex justify-content-between align-items-center mt-4">
+            <div class="container">
+              <!-- Filter Section -->
+              <div class="row mt-5 mb-3">
+                  <div class="col-md-3">
+                      <label for="country" class="form-label">Country</label>
+                      <select id="country" class="form-select">
+                          <option value="">All Countries</option>
+                          <% filterOptions.countryCodes.forEach(code => { %>
+                              <option value="<%= code %>" <%= currentFilters.country == code ? 'selected' : '' %>><%= code %></option>
+                          <% }) %>
+                      </select>
+                  </div>
+                  <div class="col-md-3">
+                    <label for="cuisines" class="form-label">Cuisines</label>
+                    <select id="cuisines" class="form-select">
+                        <option value="">All Cuisines</option>
+                        <% filterOptions.cuisines.forEach(cuisine => { %>
+                            <option value="<%= cuisine %>" <%= currentFilters.cuisines === cuisine ? 'selected' : '' %>><%= cuisine %></option>
+                        <% }) %>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                      <label class="form-label">Average Cost for Two</label>
+                      <div class="d-flex">
+                          <input type="number" id="minSpend" class="form-control me-2" placeholder="Min" value="<%= currentFilters.minSpend || '' %>">
+                          <input type="number" id="maxSpend" class="form-control" placeholder="Max" value="<%= currentFilters.maxSpend || '' %>">
+                      </div>
+                  </div>
+                  <div class="col-md-2 d-flex align-items-end">
+                      <button id="applyFilters" class="btn btn-danger w-100">Apply Filters</button>
+                  </div>
+              </div>
+              
+              <div class="d-flex justify-content-between align-items-center mt-4">
                 <div class="d-flex align-items-center">
                     <label for="limit" class="me-2">Items per page:</label>
                     <select id="limit" class="form-select" style="width: auto;">
@@ -37,17 +69,20 @@
                         <% } %>
                     </select>
                 </div>
-                <div>
+                <!-- Pagination controls -->
+                <div class="d-flex justify-content-center mt-3">
                     <% if (page > 1) { %>
-                        <a href="?page=<%= page - 1 %>&limit=<%= limit %>" class="btn btn-outline-primary me-2">Previous</a>
+                        <a href="?page=<%= page - 1 %>&limit=<%= limit %>" class="btn btn-outline-danger me-2">Previous</a>
                     <% } %>
-                    <span>Page <%= page %></span>
-                    <a href="?page=<%= page + 1 %>&limit=<%= limit %>" class="btn btn-outline-primary ms-2">Next</a>
+                    <span class="align-self-center">Page <%= page %></span>
+                    <a href="?page=<%= page + 1 %>&limit=<%= limit %>" class="btn btn-outline-danger ms-2">Next</a>
                 </div>
             </div>
-            <br>
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                <% restaurants.forEach(restaurant => { %>
+            
+  
+              <!-- Restaurant cards -->
+              <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 mt-3">
+                  <% restaurants.forEach(restaurant => { %>
                 <div class="col">
                     <a href="/restaurant/<%= restaurant['Restaurant ID'] %>" class="text-decoration-none"> <!-- note this! -->
                     <div class="card shadow-sm">
@@ -78,8 +113,26 @@
     </main>
     <script>
         document.getElementById('limit').addEventListener('change', function() {
-            window.location.href = `?page=1&limit=${this.value}`;
+            applyFilters();
         });
+
+        document.getElementById('applyFilters').addEventListener('click', applyFilters);
+
+        function applyFilters() {
+            const country = document.getElementById('country').value;
+            const cuisines = document.getElementById('cuisines').value;
+            const minSpend = document.getElementById('minSpend').value;
+            const maxSpend = document.getElementById('maxSpend').value;
+            const limit = document.getElementById('limit').value;
+
+            let url = `?page=1&limit=${limit}`;
+            if (country) url += `&country=${country}`;
+            if (cuisines) url += `&cuisines=${cuisines}`;
+            if (minSpend) url += `&minSpend=${minSpend}`;
+            if (maxSpend) url += `&maxSpend=${maxSpend}`;
+
+            window.location.href = url;
+        }
     </script>
 </body>
 </html>

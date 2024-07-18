@@ -17,15 +17,33 @@ app.get("/", async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    const response = await axios.get(`${API_URL}/allrestaurant`, {
-      params: { page, limit }
+    const { country, cuisines, minSpend, maxSpend } = req.query;
+
+    // Fetch filter options
+    const filterOptionsResponse = await axios.get(`${API_URL}/filterOptions`);
+    const filterOptions = filterOptionsResponse.data;
+
+    // Fetch restaurants with filters
+    const response = await axios.get(`${API_URL}/filteredrestaurants`, {
+      params: { page, limit, country, cuisines, minSpend, maxSpend }
     });
+
+    const currentFilters = {
+      country: country || '',
+      cuisines: cuisines || '',
+      minSpend: minSpend || '',
+      maxSpend: maxSpend || ''
+    };
+
     res.render("index.ejs", { 
       restaurants: response.data,
       page: page,
-      limit: limit
+      limit: limit,
+      filterOptions: filterOptions,
+      currentFilters: currentFilters
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Error fetching restaurants" });
   }
 });
