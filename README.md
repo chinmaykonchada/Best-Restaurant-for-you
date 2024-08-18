@@ -1,25 +1,65 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/ErQVLbmr)
-# Project Assignment: Zomato Restaurant Listing & Searching
- 
-## Key Use Cases
- 
-### Data Loading
-Create an independent script to load the Zomato restaurant data available [here](https://www.kaggle.com/datasets/shrutimehta/zomato-restaurants-data) into a database.
- 
-### Web API Service
-Develop a web API service with the following endpoints to serve the content loaded in the previous step:
-  - **Get Restaurant by ID**: Retrieve details of a specific restaurant by its ID.
-  - **Get List of Restaurants**: Fetch a list of restaurants with pagination support.
- 
-### User Interface
-Develop a web application with the following pages, which must connect to the web API service:
-  - **Restaurant List Page**: Display a list of restaurants. Clicking on a restaurant should navigate the user to the restaurant's detail page.
-  - **Restaurant Detail Page**: Show details of a specific restaurant.
- 
-## Additional Use Cases (Optional)
-If time allows, implement the following additional features, ensuring they are supported in both the API and the UI:
-- **Filtering Options**:
-  - By Country
-  - By Average Spend for Two People
-  - By Cuisines
-- **Search Functionality**: Enable search for restaurants by name and description.
+# Zomato Restaurant Explorer
+
+## Description
+This project is a web application that allows users to explore and search for restaurants using data from Zomato. It features a paginated list of restaurants with filtering options by country, cuisine, and price range, as well as a search functionality by restaurant name.
+
+## Features
+- Search restaurants by name
+- View detailed information about a specific restaurant
+- Responsive design for various screen sizes
+- View a paginated list of restaurants
+- Filter restaurants by:
+  - Country
+  - Cuisine
+  - Price range (average cost for two)
+
+## Tech Stack
+- Frontend: HTML, CSS, JavaScript, EJS
+- Backend: Node.js, Express.js
+- Database: PostgreSQL
+- Additional libraries: Axios for HTTP requests, Bootstrap for styling
+
+## Setup and Installation
+
+1. Clone the repository:
+2. Install dependencies:
+npm install
+Copy
+3. Set up the PostgreSQL database:
+- Create a database named 'projects'
+- Import the Zomato dataset into a table named 'zomato'
+- Create a 'countries' table with columns 'Country Code' and 'Country Name'
+
+4. Update database connection details in `api.js`:
+```javascript
+const db = new pg.Client({
+    user: "your_username",
+    host: "localhost",
+    database: "projects",
+    password: "your_password",
+    port: 5432,
+});
+```
+## Start the API server:
+Copynode api.js
+
+## Start the main application server:
+Copynode index.js
+
+## Access the application at http://localhost:3000
+
+API Endpoints
+- GET /restaurant/:id: Get details of a specific restaurant
+- GET /allrestaurant: Get all restaurants (paginated)
+- GET /filteredrestaurants: Get filtered restaurants
+- GET /filterOptions: Get options for filters (countries, cuisines, price range)
+- GET /searchrestaurants: Search restaurants by name
+
+File Structure:
+```
+  api.js: API server handling database operations
+  index.js: Main application server
+  views/index.ejs: Main page template
+  views/restaurant.ejs: Individual restaurant page template
+  public/: Static files (CSS, images)
+```

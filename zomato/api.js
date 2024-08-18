@@ -36,9 +36,10 @@ app.get('/allrestaurant', async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
-
+    
     try {
         const result = await db.query('SELECT * FROM zomato LIMIT $1 OFFSET $2', [limit, offset]);
+        // console.log(result.rows);
         res.json(result.rows);
     } catch (error) {
         console.error(error);
