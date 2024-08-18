@@ -19,6 +19,9 @@ This project is a web application that allows users to explore and search for re
 - Database: PostgreSQL
 - Additional libraries: Axios for HTTP requests, Bootstrap for styling
 
+**Data Source**: [Zomato Restaurants Data](https://www.kaggle.com/datasets/shrutimehta/zomato-restaurants-data).
+
+
 ## Setup and Installation
 
 1. Clone the repository:
